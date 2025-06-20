@@ -1,7 +1,32 @@
 import React, { useEffect } from 'react';
 import './page.css'
+import './Header'
+import Header from './Header';
+
 const Page = () => {
     useEffect(() => {
+        fetch('/api/test')
+          .then(res => {
+            if (!res.ok) {
+              // Handle non-OK HTTP status
+              return res.json().then(errData => {
+                throw new Error(`Server error (${res.status}): ${errData.error || res.statusText}`);
+              }).catch(() => {
+                throw new Error(`Server error (${res.status}): ${res.statusText}`);
+              });
+            }
+            return res.json();
+          })
+          .then(data => console.log('Backend response:', data))
+          .catch(err => {
+            if (err.name === 'TypeError') {
+              // Network error or invalid JSON
+              console.error('Network error or invalid JSON:', err.message);
+            } else {
+              // Other errors (e.g., server errors)
+              console.error('Backend error:', err.message);
+            }
+          });
 
     const paragraphs =[
         "Spring is my favorite season because of the beautiful changes that happen in nature. As the weather warms up, the flowers bloom in vibrant colors, creating a stunning landscape. The sweet scent of blossoms fills the air, inviting bees and butterflies to join the party. Every morning, I love to walk outside and hear the cheerful chirping of birds returning from their winter homes. The gentle breeze is refreshing, and it feels like a hug from nature. I also enjoy seeing the trees regain their green leaves, which makes everything look alive again. Spring is a time for new beginnings, and I often find myself feeling inspired and full of energy. It’s the perfect season for outdoor activities like picnics and hiking. My friends and I enjoy playing soccer in the park or riding our bikes on sunny afternoons. Each day feels like a new adventure waiting to happen. Overall, spring is a magical time that reminds me of the beauty and joy in the world around us. I cherish every moment of this season and look forward to its return each year.",
@@ -111,6 +136,7 @@ const Page = () => {
 
   return (
     <div>
+        <Header></Header>
     <div className="page">
         <div className="main-box">
         <input type="text" class="input-box"/>
